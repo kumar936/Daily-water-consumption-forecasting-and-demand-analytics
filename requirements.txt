@@ -1,0 +1,6 @@
+flask
+flask-cors
+gunicorn
+numpy>=1.24,<3
+pandas>=2.0
+scikit-learn>=1.3

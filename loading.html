@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading…</title>
+    <link rel="stylesheet" href="/static/css/loading.css" />
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a3a52 0%, #2c5aa0 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .water-loader-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="water-loader-inner">
+        <div class="loader-wrapper">
+            <div class="vessel">
+                <div class="water">
+                    <div class="wave wave-back"></div>
+                    <div class="wave"></div>
+                    <div class="bubble" style="width:8px; height:8px; left:20%; animation-delay: 0s;"></div>
+                    <div class="bubble" style="width:5px; height:5px; left:50%; animation-delay: 0.2s;"></div>
+                    <div class="bubble" style="width:6px; height:6px; left:75%; animation-delay: 0.1s;"></div>
+                </div>
+            </div>
+        </div>
+        <p class="water-loading-text">Filling H2O…</p>
+    </div>
+    <script>
+        // Redirect logic
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const destination = params.get('dest');
+
+            if (destination) {
+                setTimeout(() => {
+                    window.location.href = destination;
+                }, 2000); // 2 second delay for animation
+            } else {
+                console.log("No destination specified");
+            }
+        });
+    </script>
+</body>
+
+</html>

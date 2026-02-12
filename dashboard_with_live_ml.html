@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APMWRS - Andhra Pradesh Multi-Municipality Water Forecasting Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <link rel="stylesheet" href="/static/css/dashboard.css" />
+    <link rel="stylesheet" href="/static/css/loading.css" />
+</head>
+
+<body>
+    <!-- Loading Modal - Water-themed quick loader -->
+    <div class="loading-modal" id="loadingModal">
+        <div class="water-loader-inner">
+            <div class="loader-wrapper">
+                <div class="vessel">
+                    <div class="water">
+                        <div class="wave wave-back"></div>
+                        <div class="wave"></div>
+                        <div class="bubble" style="width:8px; height:8px; left:20%; animation-delay: 0s;"></div>
+                        <div class="bubble" style="width:5px; height:5px; left:50%; animation-delay: 0.2s;"></div>
+                        <div class="bubble" style="width:6px; height:6px; left:75%; animation-delay: 0.1s;"></div>
+                    </div>
+                </div>
+            </div>
+            <p class="water-loading-text">Loading…</p>
+        </div>
+    </div>
+
+    <!-- Top Header -->
+    <!-- Top Header (Government Style) -->
+    <div class="top-header">
+        <div class="top-header-content">
+            <div class="header-left">
+                <div class="emblem-container">
+                    <!-- Placeholder for Emblem, replaced with stylized text/icon if image unavailable -->
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg"
+                        alt="Satyameva Jayate" class="emblem-img">
+                </div>
+                <div class="header-text-block">
+                    <div class="gov-text">Government of Andhra Pradesh | Water Resources Department</div>
+                    <div class="dept-text">Andhra Pradesh Multi-Municipality Water Forecasting System</div>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="search-bar-container">
+                    <input type="text" placeholder="Search..." class="gov-search-input">
+                    <button class="gov-search-btn">🔍</button>
+                </div>
+                <div class="right-logos">
+                    <!-- Accessbility icons placeholder -->
+                    <span class="access-icon" title="Accessibility">♿</span>
+                    <span class="access-icon" title="Language">A/अ</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Bar (Blue) -->
+    <div class="main-navbar">
+        <div class="nav-container">
+            <ul class="nav-list">
+                <li class="nav-item-link"><a href="/">Home</a></li>
+                <li class="nav-item-link"><a href="system_overview.html">System Overview</a></li>
+                <li class="nav-item-link"><a href="#"
+                        onclick="window.location.href='loading.html?dest=tap_water_supply.html'">Tap water supply in
+                        HouseHolds</a></li>
+                <li class="nav-item-link"><a href="water_distribution.html" id="headerIntro"
+                        data-target="water_distribution.html">Intro</a></li>
+                <li class="nav-item-link"><a href="what_if.html" id="headerWhatIf" data-target="what_if.html">What-If
+                        Analysis</a></li>
+                <li class="nav-item-link"><a href="about_us.html">About Us</a></li>
+                <li class="nav-item-link login-link"><a href="#" onclick="showComingSoonPopup()">🔒 Login</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="header" id="dashboard-header">
+        <div class="dashboard-title">
+            <div class="dashboard-logo" aria-label="Water Supply Logo">
+                <svg class="dashboard-logo-svg" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 0C7 8 0 14 0 22c0 5.5 4.5 10 12 10s12-4.5 12-10c0-8-7-14-12-22z"
+                        fill="url(#logoGrad1)" />
+                    <defs>
+                        <linearGradient id="logoGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#4FC3F7" />
+                            <stop offset="100%" stop-color="#1565C0" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <div class="title-text">
+                <h1>Multi-Municipality Water Consumption Forecasting Dashboard</h1>
+                <p class="subtitle">Real-time ML Predictions | Andhra Pradesh State</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Municipality Selector -->
+    <div class="municipality-selector">
+        <div class="municipality-selector-left">
+            <label>📍 SELECT MUNICIPALITY:</label>
+            <select id="municipality-select" onchange="updateDashboard()">
+                <option value="">Loading...</option>
+            </select>
+        </div>
+        <span class="status-badge" id="status-badge">
+            <span class="status-dot"></span>
+            Connecting...
+        </span>
+    </div>
+
+    <!-- Dashboard Information Panel -->
+    <div class="info-panel" id="info-panel" onclick="toggleInfoPanel()">
+        <div class="info-panel-header">
+            <span>ℹ️ Dashboard Information</span>
+            <span class="info-toggle-icon">▼</span>
+        </div>
+        <div class="info-content" id="info-content">
+            <ul>
+                <li><strong>Model Type:</strong> Random Forest Regression trained on all 10 municipalities (100,000 data
+                    points)</li>
+                <li><strong>How it works:</strong> Municipality is encoded as a categorical feature in the model</li>
+                <li><strong>Prediction Scope:</strong> Total aggregate water demand for the selected municipality</li>
+                <li><strong>Data Range:</strong> Historical data from 2019-2026 for all Andhra Pradesh municipalities
+                </li>
+                <li><strong>Features Used:</strong> Temperature, Humidity, Rainfall, Day Type, Population, Previous
+                    Consumption, Municipality (encoded)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Alert Box -->
+    <div class="alert-box" id="alert-box">
+        <h3 id="alert-title">⚠️ High Demand Alert</h3>
+        <p id="alert-text">Loading predictions from ML model...</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid" id="stats-grid">
+        <div class="stat-card">
+            <h3 id="stat1-title">Current Prediction</h3>
+            <div class="stat-value" style="color: #3498db;" id="stat1-value">--</div>
+            <div class="stat-change positive" id="stat1-change">Loading...</div>
+        </div>
+        <div class="stat-card">
+            <h3 id="stat2-title">Average Consumption</h3>
+            <div class="stat-value" style="color: #9b59b6;" id="stat2-value">--</div>
+            <div class="stat-change positive" id="stat2-change">Historical baseline</div>
+        </div>
+        <div class="stat-card">
+            <h3 id="stat4-title">Population</h3>
+            <div class="stat-value" style="color: #e67e22;" id="stat4-value">--</div>
+            <div class="stat-change negative" id="stat4-change">Municipality size</div>
+        </div>
+        <div class="stat-card">
+            <h3 id="stat5-title">Tomorrow's ML Prediction</h3>
+            <div class="stat-value" style="color: #27ae60;" id="stat5-value">--</div>
+            <div class="stat-change positive" id="stat5-change">Next day forecast</div>
+        </div>
+    </div>
+
+    <!-- Municipality Comparison Panel -->
+    <div class="comparison-panel">
+        <h2>📊 Cross-Municipality Comparison (Live ML Predictions)</h2>
+        <div id="comparison-chart"></div>
+    </div>
+
+    <!-- Charts -->
+    <div class="chart-grid">
+        <!-- Forecast vs Actual Chart -->
+        <div class="chart-card full-width">
+            <h2 id="forecast-title">📈 7-Day Forecast (Live ML Predictions)</h2>
+            <div id="forecast-chart"></div>
+        </div>
+
+        <!-- Daily Pattern Chart -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3 id="hourly-title">⏰ Hourly Consumption Pattern</h3>
+                <button class="info-btn" data-chart="hourly-consumption" title="Information">ⓘ</button>
+            </div>
+            <div id="hourly-chart"></div>
+        </div>
+
+        <!-- Weather Impact Chart -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3 id="temp-impact-title">🌡️ Temperature Impact (Live ML)</h3>
+                <button class="info-btn" data-chart="temperature-impact" title="Information">ⓘ</button>
+            </div>
+            <div id="temp-impact-chart"></div>
+        </div>
+
+        <!-- Feature Importance Chart -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>🎯 Model Feature Importance (All Municipalities)</h3>
+                <button class="info-btn" data-chart="feature-importance" title="Information">ⓘ</button>
+            </div>
+            <div id="feature-importance-pie"></div>
+        </div>
+
+        <!-- Weekly Comparison Chart -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3 id="weekly-title">📊 Week-over-Week Comparison (Live ML)</h3>
+                <button class="info-btn" data-chart="weekly-comparison" title="Information">ⓘ</button>
+            </div>
+            <div id="weekly-chart"></div>
+        </div>
+    </div>
+
+    <!-- Municipality Map Panel -->
+    <div class="map-panel">
+        <h2>📍 Andhra Pradesh - Municipality Locations & Live Predictions</h2>
+        <div id="municipality-map"></div>
+    </div>
+    </div>
+
+    <!-- Info Modal Backdrop -->
+    <div class="info-modal-backdrop" id="infoModalBackdrop"></div>
+
+    <!-- Info Modals -->
+    <div class="info-modal" id="infoModal">
+        <button class="info-modal-close" id="infoModalClose">×</button>
+        <h2 class="info-modal-title" id="infoModalTitle">Chart Information</h2>
+
+        <div class="info-modal-section">
+            <div class="info-modal-section-header">
+                <span class="icon">📌</span>
+                <span>Why</span>
+            </div>
+            <div class="info-modal-section-content" id="infoModalWhy">Loading...</div>
+        </div>
+
+        <div class="info-modal-section">
+            <div class="info-modal-section-header">
+                <span class="icon">⚙️</span>
+                <span>How</span>
+            </div>
+            <div class="info-modal-section-content" id="infoModalHow">Loading...</div>
+        </div>
+
+        <div class="info-modal-section">
+            <div class="info-modal-section-header">
+                <span class="icon">🎯</span>
+                <span>Purpose</span>
+            </div>
+            <div class="info-modal-section-content" id="infoModalPurpose">Loading...</div>
+        </div>
+
+        <div class="info-modal-section">
+            <div class="info-modal-section-header">
+                <span class="icon">💡</span>
+                <span>Key Insights</span>
+            </div>
+            <div class="info-modal-section-content" id="infoModalInsights">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <div class="footer-text">© 2022 APWRD . All Rights Reserved.</div>
+                <div class="footer-text">NATIONAL HYDROLOGY PROJECT</div>
+            </div>
+            <div class="footer-center">
+                <div class="footer-text"><strong>Andhra Pradesh Water Resource Department</strong></div>
+                <div class="footer-text">National Remote Sensing Centre | Ground Water & Water Audit Department</div>
+            </div>
+            <div class="footer-right">
+                <div class="footer-text">Powered by 🎓 Batch 12</div>
+            </div>
+        </div>
+    </div>
+
+    <button class="menu-btn" id="menuBtn">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="content-backdrop" id="contentBackdrop"></div>
+
+    <nav class="side-nav" id="sideNav">
+        <div style="padding: 60px 30px 20px;">
+            <h2 style="color: white; font-size: 1.2rem; margin-bottom: 5px;">Data Explorer</h2>
+            <div style="width: 40px; height: 3px; background: var(--accent-blue);"></div>
+        </div>
+        <ul class="nav-links">
+            <li class="nav-item current"><a href="#">Introduction</a></li>
+            <li class="nav-item"><a href="#">Dashboard Information</a></li>
+            <li class="nav-item"><a href="#">Alert System</a></li>
+            <li class="nav-item"><a href="#">Map Visualization</a></li>
+            <li class="nav-item"><a href="#">About</a></li>
+        </ul>
+    </nav>
+
+    <!-- Content Sections -->
+    <div class="content-section" id="dashboard-info">
+        <button class="close-btn" onclick="hideContentSection()">×</button>
+        <h2>ℹ️ Dashboard Information</h2>
+        <div style="animation: fadeIn 0.8s ease-in;">
+            <p><strong>Welcome to the Andhra Pradesh Multi-Municipality Water Forecasting Dashboard!</strong></p>
+            <br>
+            <p>This interactive dashboard provides real-time ML-powered predictions for water consumption across 10
+                major municipalities in Andhra Pradesh.</p>
+            <br>
+            <ul style="text-align: left; line-height: 1.6;">
+                <li><strong>ML Model:</strong> Random Forest Regression trained on 100,000+ data points</li>
+                <li><strong>Features:</strong> Temperature, Humidity, Rainfall, Day Type, Population, Historical
+                    Consumption</li>
+                <li><strong>Prediction Scope:</strong> Daily aggregate water demand per municipality</li>
+                <li><strong>Data Range:</strong> Historical data from 2019-2026</li>
+                <li><strong>Real-time Updates:</strong> Live weather integration and scenario simulation</li>
+            </ul>
+            <br>
+            <p style="color: #1a3a52; font-weight: bold;">Navigate through different sections using the side menu for
+                comprehensive insights!</p>
+        </div>
+    </div>
+
+    <div class="content-section" id="alert-system">
+        <button class="close-btn" onclick="hideContentSection()">×</button>
+        <h2>📊 Elevated Demand Notice</h2>
+        <div style="animation: pulse 1s infinite;">
+            <div
+                style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="margin: 0 0 10px 0;">⚠️ High Demand Alert System</h3>
+                <p style="margin: 0; font-size: 16px;">Monitor real-time water consumption patterns and receive
+                    automated alerts for elevated demand scenarios.</p>
+            </div>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db;">
+                <h4 style="margin: 0 0 10px 0; color: #1a3a52;">Alert Thresholds:</h4>
+                <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                    <li><strong>Normal:</strong> Consumption within 10% of average</li>
+                    <li><strong>Elevated:</strong> 10-25% above average (Yellow Alert)</li>
+                    <li><strong>High:</strong> 25-50% above average (Orange Alert)</li>
+                    <li><strong>Critical:</strong> 50%+ above average (Red Alert)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section" id="map-visualization">
+        <button class="close-btn" onclick="hideContentSection()">×</button>
+        <h2>📍 Andhra Pradesh - Municipality Locations & Live Predictions</h2>
+        <div style="animation: slideInFromLeft 0.8s ease-out;">
+            <p><strong>Interactive Geographic Visualization</strong></p>
+            <br>
+            <div
+                style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; border-radius: 10px;">
+                <h3 style="margin: 0 0 15px 0;">🗺️ Map Features:</h3>
+                <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                    <li><strong>Real-time Predictions:</strong> Color-coded municipalities based on ML predictions</li>
+                    <li><strong>Interactive Markers:</strong> Click on municipalities for detailed information</li>
+                    <li><strong>Heat Map:</strong> Visual representation of water demand intensity</li>
+                    <li><strong>Geographic Context:</strong> Andhra Pradesh state boundaries and major cities</li>
+                    <li><strong>Live Updates:</strong> Predictions update with changing weather conditions</li>
+                </ul>
+            </div>
+            <br>
+            <p style="color: #1a3a52; font-weight: bold;">Explore the map to understand regional water consumption
+                patterns and plan resource allocation effectively!</p>
+        </div>
+    </div>
+
+    <script src="/static/js/dashboard.js" defer></script>
+</body>
+
+</html>

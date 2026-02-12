@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Documentation - Water Consumption Forecasting</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css" /> <!-- Base header/nav styles -->
+    <link rel="stylesheet" href="/static/css/system_overview.css" /> <!-- Specific page styles -->
+</head>
+
+<body>
+
+    <!-- Top Header (Government Style) - Consistent with other pages -->
+    <div class="top-header">
+        <div class="top-header-content">
+            <div class="header-left">
+                <div class="emblem-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg"
+                        alt="Satyameva Jayate" class="emblem-img">
+                </div>
+                <div class="header-text-block">
+                    <div class="gov-text">Government of Andhra Pradesh | Water Resources Department</div>
+                    <div class="dept-text">Andhra Pradesh Multi-Municipality Water Forecasting System</div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="search-bar-container">
+                    <input type="text" placeholder="Search..." class="gov-search-input">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <div class="main-navbar">
+        <div class="nav-container">
+            <ul class="nav-list">
+                <li class="nav-item-link"><a href="/">Home</a></li>
+                <!-- This is the active page now -->
+                <li class="nav-item-link active"><a href="system_overview.html">System Overview</a></li>
+                <li class="nav-item-link"><a href="tap_water_supply.html">Tap water supply in Households</a></li>
+                <li class="nav-item-link"><a href="water_distribution.html">Intro</a></li>
+                <li class="nav-item-link"><a href="what_if.html">What-If Analysis</a></li>
+                <li class="nav-item-link"><a href="about_us.html">About Us</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Documentation Content -->
+    <div class="container fade-in">
+
+        <div class="page-title-section">
+            <h1 class="document-title">Project Documentation (Paper Work)</h1>
+            <p class="document-subtitle">Daily Water Consumption Forecasting and Demand Analysis</p>
+        </div>
+
+        <!-- 1. Project Overview -->
+        <section class="doc-section">
+            <h2>1. Project Overview</h2>
+            <p><strong>Title:</strong> Daily Water Consumption Forecasting and Demand Analysis</p>
+            <p><strong>Domain:</strong> Machine Learning / Data Analytics</p>
+            <p>This project addresses the critical challenge of efficient water resource management in municipalities.
+                By leveraging historical water consumption data and meteorological factors, we aim to predict future
+                water demand. This predictive capability allows for proactive resource allocation, reducing wastage and
+                ensuring consistent supply to households.</p>
+        </section>
+
+        <!-- 2. Objectives -->
+        <section class="doc-section">
+            <h2>2. Objectives</h2>
+            <ul>
+                <li>To analyze historical water consumption patterns across 10 municipalities in Andhra Pradesh.</li>
+                <li>To identify key factors influencing water demand, including temperature, humidity, and rainfall.
+                </li>
+                <li>To develop a Machine Learning model (Random Forest Regressor) for accurate daily water demand
+                    forecasting.</li>
+                <li>To provide an interactive dashboard for stakeholders to visualize trends and what-if scenarios.</li>
+                <li>To enable better decision-making for water distribution and leak detection planning.</li>
+            </ul>
+        </section>
+
+        <!-- 3. Dataset Information -->
+        <section class="doc-section">
+            <h2>3. Dataset Information</h2>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <strong>Data Type</strong><br>Simulated Realistic Data
+                </div>
+                <div class="grid-item">
+                    <strong>Time Period</strong><br>2019 - 2026
+                </div>
+                <div class="grid-item">
+                    <strong>Size</strong><br>100,000+ Records
+                </div>
+                <div class="grid-item">
+                    <strong>Target Variable</strong><br>Daily Water Consumption
+                </div>
+            </div>
+            <h3>Key Features:</h3>
+            <ul>
+                <li><strong>Date/Time:</strong> seasonal trends and daily patterns.</li>
+                <li><strong>Weather Metrics:</strong> Temperature (°C), Humidity (%), Rainfall (mm).</li>
+                <li><strong>Demographics:</strong> Population density (correlated with demand).</li>
+                <li><strong>Location:</strong> Municipality ID (Categorical).</li>
+                <li><strong>Historical usage:</strong> Past consumption metrics.</li>
+            </ul>
+        </section>
+
+        <!-- 4. Methodology -->
+        <section class="doc-section">
+            <h2>4. Methodology</h2>
+            <p>The project follows a standard Data Science lifecycle:</p>
+            <div class="flow-container">
+                <div class="flow-step">Data Collection</div>
+                <div class="flow-step">preprocessing</div>
+                <div class="flow-step">Feature Engineering</div>
+                <div class="flow-step">Model Training</div>
+                <div class="flow-step">Evaluation</div>
+                <div class="flow-step">Deployment</div>
+            </div>
+            <p><strong>Model:</strong> We utilized the <em>Random Forest Regressor</em>, an ensemble learning method,
+                due to its robustness against overfitting and ability to handle non-linear relationships in tabular
+                data.</p>
+        </section>
+
+        <!-- 5. Tools & Technologies -->
+        <section class="doc-section">
+            <h2>5. Tools & Technologies</h2>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <i class="fab fa-html5 grid-icon"></i>
+                    <strong>Frontend</strong><br>HTML5, CSS3, JavaScript
+                </div>
+                <div class="grid-item">
+                    <i class="fab fa-python grid-icon"></i>
+                    <strong>Backend</strong><br>Flask (Python)
+                </div>
+                <div class="grid-item">
+                    <i class="fas fa-brain grid-icon"></i>
+                    <strong>ML Core</strong><br>Scikit-learn, Pandas, NumPy
+                </div>
+                <div class="grid-item">
+                    <i class="fas fa-cloud-upload-alt grid-icon"></i>
+                    <strong>Deployment</strong><br>Render Cloud Platform
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. System Architecture -->
+        <section class="doc-section">
+            <h2>6. System Architecture</h2>
+            <div class="architecture-block">
+                <i class="fas fa-project-diagram" style="font-size: 3rem; color: #ccc; margin-bottom: 10px;"></i>
+                <p><strong>User Input (Dashboard)</strong> ➡️ <strong>Flask Server (API)</strong> ➡️ <strong>ML Model
+                        (Inference)</strong></p>
+                <p>⬇️</p>
+                <p><strong>Visualization (Charts/Maps)</strong> ⬅️ <strong>Prediction Response</strong></p>
+            </div>
+            <p>The system is built on a client-server architecture. The frontend sends user inputs (like selected
+                municipality or weather scenarios) to the Flask backend. The backend preprocesses this input, queries
+                the pre-trained Random Forest model, and returns the predicted consumption value, which is then rendered
+                on the dashboard.</p>
+        </section>
+
+        <!-- 7. Results & Insights -->
+        <section class="doc-section">
+            <h2>7. Results & Insights</h2>
+            <ul>
+                <li><strong>Accuracy:</strong> The Random Forest model achieved a high R² score on the test set,
+                    indicating reliable predictions.</li>
+                <li><strong>Weather Impact:</strong> Analysis confirms a strong positive correlation between Temperature
+                    and Water Consumption.</li>
+                <li><strong>Seasonality:</strong> Demand peaks during summer months (April-June) and stabilizes during
+                    monsoon seasons.</li>
+                <li><strong>Scalability:</strong> The model successfully generalizes across different municipalities
+                    with varying population sizes.</li>
+            </ul>
+        </section>
+
+        <!-- 8. Limitations -->
+        <section class="doc-section">
+            <h2>8. Limitations</h2>
+            <ul>
+                <li><strong>Data Scope:</strong> The model currently relies on simulated data based on realistic
+                    assumptions, which may not perfectly capture all ground-level anomalies.</li>
+                <li><strong>External Factors:</strong> Unpredictable events like pipe bursts or sudden major festivals
+                    are not explicitly modeled.</li>
+                <li><strong>Static Population:</strong> Live population changes are estimated rather than real-time.
+                </li>
+            </ul>
+        </section>
+
+        <!-- 9. Future Scope -->
+        <section class="doc-section">
+            <h2>9. Future Scope</h2>
+            <ul>
+                <li><strong>IoT Integration:</strong> Connecting with smart meters for real-time validation.</li>
+                <li><strong>Advanced Weather APIs:</strong> Integrating live forecasts for automated future predictions.
+                </li>
+                <li><strong>Deep Learning:</strong> Exploring LSTM (Long Short-Term Memory) networks for better
+                    time-series forecasting.</li>
+                <li><strong>Mobile App:</strong> Developing a mobile interface for field engineers.</li>
+            </ul>
+        </section>
+
+        <!-- 10. Team & Acknowledgment -->
+        <section class="doc-section">
+            <h2>10. Team & Acknowledgment</h2>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <strong>Team Members</strong><br>Batch 12 Students
+                </div>
+                <div class="grid-item">
+                    <strong>Guide/Mentor</strong><br>Faculty Name (Optional)
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 20px;">We thank our institution and faculty for their support and
+                guidance throughout this project execution.</p>
+        </section>
+
+        <div class="footer-line">
+            Designed, Developed, and Presented by Batch 12
+        </div>
+
+    </div>
+
+</body>
+
+</html>
